@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galeria da Música — Bar Lounge & Nightclub | Viana, Luanda</title>
+  
+  <!-- Fontes Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       1. VARIÁVEIS & RESET (TEMA DARK LUXURY COM TONS DOURADOS/ÂMBAR)
+       ========================================================================== */
+    :root {
+      --bg-base: #08070b;
+      --bg-surface: #121019;
+      --bg-card: rgba(23, 20, 31, 0.75);
+      --gold-primary: #f5a623;
+      --gold-glow: #ffbe43;
+      --gold-dark: #b87b14;
+      --text-main: #f5f5f7;
+      --text-muted: #9c98ab;
+      --border-glass: rgba(245, 166, 35, 0.15);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --font-title: 'Cinzel', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'Space Grotesk', monospace;
+      --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Brilho de Fundo Ambiente */
+    .ambient-glow-1 {
+      position: fixed;
+      top: -150px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(245, 166, 35, 0.12) 0%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow-2 {
+      position: fixed;
+      bottom: -150px;
+      right: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(184, 123, 20, 0.1) 0%, transparent 70%);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ==========================================================================
+       2. HEADER & NAVEGAÇÃO
+       ========================================================================== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(8, 7, 11, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: var(--transition);
+    }
+
+    .header-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 1.1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Logotipo Reconstruído em SVG/CSS */
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-icon svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 8px rgba(245, 166, 35, 0.5));
+    }
+
+    .brand-names {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-names .title {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      background: linear-gradient(135deg, #ffffff 40%, var(--gold-primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    .brand-names .subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-item a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-item a:hover,
+    .nav-item a.active {
+      color: #fff;
+    }
+
+    .nav-item a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold-primary);
+      box-shadow: 0 0 10px var(--gold-glow);
+      transition: var(--transition);
+    }
+
+    .nav-item a:hover::after,
+    .nav-item a.active::after {
+      width: 100%;
+    }
+
+    /* Destaque especial para o botão de Galeria */
+    .nav-item.galeria-badge a {
+      color: var(--gold-glow);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-item.galeria-badge a::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold-primary);
+      box-shadow: 0 0 8px var(--gold-primary);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .btn-reservar {
+      background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+      color: #000;
+      padding: 0.7rem 1.6rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      text-transform: uppercase;
+      text-decoration: none;
+      box-shadow: 0 0 20px rgba(245, 166, 35, 0.35);
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-reservar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(245, 166, 35, 0.6);
+      color: #000;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION
+       ========================================================================== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 4rem;
+      background: 
+        radial-gradient(circle at center, rgba(245, 166, 35, 0.08) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(8, 7, 11, 0.4) 0%, var(--bg-base) 100%);
+      z-index: 10;
+    }
+
+    .hero-content {
+      max-width: 900px;
+    }
+
+    .location-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.45rem 1.2rem;
+      background: rgba(245, 166, 35, 0.1);
+      border: 1px solid var(--border-glass);
+      border-radius: 50px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      color: var(--gold-glow);
+      text-transform: uppercase;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-title);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(180deg, #ffffff 40%, rgba(255, 255, 255, 0.65) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, var(--gold-glow), var(--gold-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3.5rem;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      padding: 0.8rem 1.8rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gold-primary);
+      background: rgba(245, 166, 35, 0.08);
+      color: var(--gold-primary);
+    }
+
+    /* Equalizador animado no Hero */
+    .sound-bars-display {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 5px;
+      height: 30px;
+      margin-top: 1rem;
+    }
+
+    .sound-bars-display span {
+      width: 4px;
+      background: var(--gold-primary);
+      border-radius: 3px;
+      animation: soundWave 1.4s ease-in-out infinite alternate;
+    }
+
+    .sound-bars-display span:nth-child(1) { height: 12px; animation-delay: 0.1s; }
+    .sound-bars-display span:nth-child(2) { height: 26px; animation-delay: 0.3s; }
+    .sound-bars-display span:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+    .sound-bars-display span:nth-child(4) { height: 30px; animation-delay: 0.5s; }
+    .sound-bars-display span:nth-child(5) { height: 15px; animation-delay: 0.4s; }
+    .sound-bars-display span:nth-child(6) { height: 22px; animation-delay: 0.2s; }
+
+    @keyframes soundWave {
+      0% { transform: scaleY(0.3); opacity: 0.4; }
+      100% { transform: scaleY(1); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       4. SEÇÃO: SOBRE O ESPAÇO
+       ========================================================================== */
+    section {
+      padding: 6rem 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title-wrap {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-tag {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--font-title);
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      transition: var(--transition);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--border-glass);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(245, 166, 35, 0.1);
+    }
+
+    .feature-icon {
+      font-size: 2.2rem;
+      color: var(--gold-primary);
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-title);
+      font-size: 1.3rem;
+      letter-spacing: 0.05em;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ==========================================================================
+       5. SEÇÃO: EVENTOS & NOITES ANGOLANAS
+       ========================================================================== */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.2rem;
+    }
+
+    .event-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .event-card:hover {
+      border-color: var(--gold-primary);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .event-banner {
+      height: 220px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .event-banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 40%, var(--bg-surface) 100%);
+    }
+
+    .event-tag {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(8, 7, 11, 0.85);
+      border: 1px solid var(--border-glass);
+      color: var(--gold-primary);
+      padding: 0.35rem 0.9rem;
+      border-radius: 30px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      backdrop-filter: blur(8px);
+      z-index: 2;
+    }
+
+    .event-details {
+      padding: 1.8rem;
+    }
+
+    .event-date {
+      color: var(--gold-glow);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.4rem;
+    }
+
+    .event-title {
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .event-lineup {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ==========================================================================
+       6. SEÇÃO: CARDÁPIO & COCKTAILS (KZ)
+       ========================================================================== */
+    .menu-showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .menu-category {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 2.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .menu-category h3 {
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      color: var(--gold-primary);
+      margin-bottom: 1.8rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .menu-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .menu-item-info h4 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .menu-item-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .menu-item-price {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--gold-glow);
+      white-space: nowrap;
+      margin-left: 1rem;
+    }
+
+    /* ==========================================================================
+       7. SEÇÃO DE PREVIEW DA GALERIA (PREPARADA PARA O PRÓXIMO PASSO)
+       ========================================================================== */
+    #galeria {
+      background: radial-gradient(circle at center, rgba(245, 166, 35, 0.05) 0%, var(--bg-base) 70%);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .galeria-placeholder-box {
+      border: 2px dashed rgba(245, 166, 35, 0.35);
+      background: rgba(18, 16, 25, 0.6);
+      border-radius: 20px;
+      padding: 5rem 2rem;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+      backdrop-filter: blur(15px);
+    }
+
+    .galeria-badge-big {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 166, 35, 0.15);
+      border: 1px solid var(--border-glass);
+      color: var(--gold-glow);
+      padding: 0.5rem 1.4rem;
+      border-radius: 30px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 1.5rem;
+    }
+
+    .galeria-placeholder-box h3 {
+      font-family: var(--font-title);
+      font-size: 2.4rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.08em;
+    }
+
+    .galeria-placeholder-box p {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2.2rem;
+      font-size: 1rem;
+    }
+
+    /* ==========================================================================
+       8. CONTACTOS & LOCALIZAÇÃO (VIANA, LUANDA)
+       ========================================================================== */
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .contact-info h3 {
+      font-family: var(--font-title);
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .contact-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+    }
+
+    .contact-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(245, 166, 35, 0.1);
+      border: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--gold-primary);
+      flex-shrink: 0;
+    }
+
+    .contact-text h5 {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--gold-primary);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .contact-text p, .contact-text a {
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .location-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .location-box .admin-pin {
+      font-size: 3rem;
+      color: var(--gold-primary);
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    /* ==========================================================================
+       9. MODAL DE RESERVA (WHATSAPP ANGOLA DIRETO)
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 5, 10, 0.88);
+      backdrop-filter: blur(16px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #13111b;
+      border: 1px solid var(--border-glass);
+      border-radius: 16px;
+      max-width: 480px;
+      width: 100%;
+      padding: 2.8rem 2.2rem;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(245, 166, 35, 0.2);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    .modal-card h3 {
+      font-family: var(--font-title);
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .modal-card p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      background: #191624;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--gold-primary);
+      box-shadow: 0 0 12px rgba(245, 166, 35, 0.3);
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 3rem 2rem;
+      background: #050408;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 900px) {
+      .header-container { padding: 1rem 1.5rem; }
+      .menu-toggle { display: block; }
+      nav {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: rgba(12, 10, 18, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 2.5rem 1.5rem;
+        gap: 1.8rem;
+        transform: translateY(-150%);
+        transition: transform 0.4s ease;
+        border-bottom: 1px solid var(--border-glass);
+      }
+      nav.active { transform: translateY(0); }
+      .nav-links { flex-direction: column; text-align: center; gap: 1.5rem; }
+      .menu-showcase, .contact-wrapper { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Efeitos de iluminação de fundo -->
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <!-- ================= HEADER & NAVEGAÇÃO ================= -->
+  <header>
+    <div class="header-container">
+      <a href="#inicio" class="brand-logo">
+        <div class="logo-icon">
+          <!-- Vetor SVG inspirado no logótipo Galeria da Música (Soundwave vertical) -->
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="38" width="8" height="24" rx="4" fill="url(#goldGrad)" />
+            <rect x="26" y="22" width="8" height="56" rx="4" fill="url(#goldGrad)" />
+            <rect x="42" y="8" width="10" height="84" rx="5" fill="url(#goldGrad)" />
+            <rect x="58" y="16" width="8" height="68" rx="4" fill="url(#goldGrad)" />
+            <rect x="74" y="32" width="8" height="36" rx="4" fill="url(#goldGrad)" />
+            <circle cx="90" cy="50" r="5" fill="url(#goldGrad)" />
+            <defs>
+              <linearGradient id="goldGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FFD066"/>
+                <stop offset="0.5" stop-color="#F5A623"/>
+                <stop offset="1" stop-color="#B87B14"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-names">
+          <span class="title">Galeria da Música</span>
+          <span class="subtitle">Bar Lounge & Club</span>
+        </div>
+      </a>
+
+      <button class="menu-toggle" id="menu-btn" aria-label="Abrir Menu">☰</button>
+
+      <nav id="navbar">
+        <ul class="nav-links">
+          <li class="nav-item"><a href="#inicio" class="active">Início</a></li>
+          <li class="nav-item"><a href="#sobre">O Espaço</a></li>
+          <li class="nav-item"><a href="#eventos">Noites & Som</a></li>
+          <li class="nav-item"><a href="#menu">Cardápio</a></li>
+          <!-- ABA DA GALERIA PEDIDA NO PROMPT -->
+          <li class="nav-item galeria-badge"><a href="#galeria">Galeria</a></li>
+          <li class="nav-item"><a href="#contactos">Contactos</a></li>
+        </ul>
+        <button class="btn-reservar" id="btn-open-reserva">Reservar Mesa</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="hero" id="inicio">
+    <div class="hero-content">
+      <div class="location-pill">
+        📍 Vila de Viana • De frente à Administração Municipal
+      </div>
+
+      <h1 class="hero-title">
+        ONDE A NOITE GANHA <span>RITMO & ALMA</span>
+      </h1>
+
+      <p class="hero-desc">
+        O ponto de encontro de Luanda para quem aprecia boa gastronomia, cocktails selecionados e uma experiência musical inigualável — do Afro House e Amapiano ao melhor Semba e Kizomba.
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn-reservar" id="hero-btn-reserva">Garantir Lugar VIP</button>
+        <a href="#galeria" class="btn-secondary">Explorar Galeria</a>
+      </div>
+
+      <!-- Pequeno equalizador musical -->
+      <div class="sound-bars-display">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= O ESPAÇO ================= -->
+  <section id="sobre">
+    <div class="container">
+      <div class="section-title-wrap">
+        <span class="section-tag">A Nossa Essência</span>
+        <h2 class="section-title">Bar Lounge & Gastronomia</h2>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🍸</div>
+          <h3>Cocktails & Bar Selecionado</h3>
+          <p>Bebidas nacionais e internacionais de topo, gins aromáticos, cocktails de assinatura e a autêntica cerveja Cuca sempre gelada.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🍲</div>
+          <h3>Menu Variado & Saboroso</h3>
+          <p>Petiscos e pratos que combinam sabores angolanos contemporâneos: picanha no ponto, asas crocantes, choco frito e tábuas para partilhar.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎶</div>
+          <h3>Ambiente Musical Acolhedor</h3>
+          <p>Acústica de alto nível, DJs residentes conceituados e apresentações intimistas ao vivo para embalar o fim de tarde e a madrugada.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= NOITES & EVENTOS ================= -->
+  <section id="eventos" style="background: rgba(12, 10, 18, 0.4);">
+    <div class="container">
+      <div class="section-title-wrap">
+        <span class="section-tag">Programação Semanal</span>
+        <h2 class="section-title">As Noites de Viana</h2>
+      </div>
+
+      <div class="events-grid">
+        <div class="event-card">
+          <div class="event-banner" style="background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800&auto=format&fit=crop');">
+            <span class="event-tag">Quinta-Feira</span>
+          </div>
+          <div class="event-details">
+            <div class="event-date">20:00 — 03:00</div>
+            <h3 class="event-title">Quinta do Semba & Voz</h3>
+            <p class="event-lineup">Música ao vivo, clássicos angolanos e degustação de petiscos com amigos após o trabalho.</p>
+            <button class="btn-secondary open-res-card" style="width: 100%; text-align: center;">Reservar Sofá</button>
+          </div>
+        </div>
+
+        <div class="event-card">
+          <div class="event-banner" style="background-image: url('https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?q=80&w=800&auto=format&fit=crop');">
+            <span class="event-tag">Sexta-Feira</span>
+          </div>
+          <div class="event-details">
+            <div class="event-date">22:00 — Até de Manhã</div>
+            <h3 class="event-title">Afro Beats & Amapiano Pulse</h3>
+            <p class="event-lineup">Os melhores DJs de Luanda num set vibrante de Afro House, Amapiano e batidas eletrónicas quentes.</p>
+            <button class="btn-secondary open-res-card" style="width: 100%; text-align: center;">Reservar Sofá</button>
+          </div>
+        </div>
+
+        <div class="event-card">
+          <div class="event-banner" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop');">
+            <span class="event-tag">Sábado</span>
+          </div>
+          <div class="event-details">
+            <div class="event-date">21:30 — 05:00</div>
+            <h3 class="event-title">Galeria Club Night</h3>
+            <p class="event-lineup">A noite mais exclusiva do fim de semana. Serviço de garrafas premium, ambiente VIP e luzes cénicas.</p>
+            <button class="btn-secondary open-res-card" style="width: 100%; text-align: center;">Reservar Sofá</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CARDÁPIO & BEBIDAS ================= -->
+  <section id="menu">
+    <div class="container">
+      <div class="section-title-wrap">
+        <span class="section-tag">Sabores Selecionados</span>
+        <h2 class="section-title">Menu & Bebidas</h2>
+      </div>
+
+      <div class="menu-showcase">
+        <!-- Bebidas -->
+        <div class="menu-category">
+          <h3>Cocktails & Bar</h3>
+          <ul class="menu-list">
+            <li class="menu-item">
+              <div class="menu-item-info">
+                <h4>Galeria Gold Signature</h4>
+                <p>Whisky premium, xarope de maracujá, sumo de lima e especiarias</p>
+              </div>
+              <span class="menu-item-price">6.500 Kz</span>
+            </li>
+            <li class="menu-item">
+              <div class="menu-item-info">
+                <h4>Mojito Tropical Angolano</h4>
+                <p>Rum branco, hortelã fresca, múcua e soda gaseificada</p>
+              </div>
+              <span class="menu-item-price">5.000 Kz</span>
+            </li>
+            <li class="menu-item">
+              <div class="menu-item-info">
+                <h4>Balde de Cerveja Cuca / Tigra (6 unid.)</h4>
+                <p>Servidas bem geladas no gelo moído com limão</p>
+              </div>
+              <span class="menu-item-price">7.500 Kz</span>
+            </li>
+            <li class="menu-item">
+              <div class="menu-item-info">
+                <h4>Garrafa Gin Hendrick's + Tónicas</h4>
+                <p>Acompanha especiarias do barman e fatias de pepino</p>
+              </div>
+              <span class="menu-item-price">45.000 Kz</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Comida / Petiscos -->
+        <div class="menu-category">
+          <h3>Petiscos & Grelhados</h3>
+          <ul class="menu-list">
+            <li class="menu-item">
+              <div class="menu-item-info">
+                <h4>Tábua de Picanha na Chapa</h4>
+                <p>Fatias tenras de picanha com farofa temperada, mandioca e molho tártaro</p>
+              </div>
+              <span class="menu-item-price">14.000 Kz</span>
+            </li>
+            <li class="menu-item">
+              <div class="menu-item-info">
+                <h4>Choco Frito com Molho Vilão</h4>
+                <p>Crocante, aromatizado com alho, coentros e gomos de limão fresco</p>
+              </div>
+              <span class="menu-item-price">9.500 Kz</span>
+            </li>
+            <li class="menu-item">
+              <div class="menu-item-info">
+                <h4>Asinhas Picantes à Viana</h4>
+                <p>Asas douradas marinadas em piripiri suave e molho barbecue rústico</p>
+              </div>
+              <span class="menu-item-price">7.000 Kz</span>
+            </li>
+            <li class="menu-item">
+              <div class="menu-item-info">
+                <h4>Hambúrguer Galeria Lounge</h4>
+                <p>Carne maturada 180g, queijo cheddar fundido, cebola caramelizada e batatas fritas</p>
+              </div>
+              <span class="menu-item-price">8.500 Kz</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SEÇÃO: GALERIA (PREPARADA PARA EXPANSÃO) ================= -->
+  <section id="galeria">
+    <div class="container">
+      <div class="section-title-wrap">
+        <span class="section-tag">Experiência Visual</span>
+        <h2 class="section-title">Galeria do Espaço</h2>
+      </div>
+
+      <div class="galeria-placeholder-box">
+        <div class="galeria-badge-big">
+          <span>●</span> MÓDULO VISUAL PRONTO PARA ATIVAÇÃO
+        </div>
+        <h3>Arquivo Imersivo Galeria da Música</h3>
+        <p>
+          Este espaço está reservado para a cúpula 3D interativa de fotografias dos nossos eventos, artistas, convidados e ambiente em Viana.
+        </p>
+        <button class="btn-reservar" onclick="alert('O módulo visual completo será carregado aqui na próxima etapa!')">
+          Ver Pré-Visualização
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONTACTOS & LOCALIZAÇÃO ================= -->
+  <section id="contactos">
+    <div class="container">
+      <div class="contact-wrapper">
+        <div class="contact-info">
+          <span class="section-tag">Onde Nos Encontrar</span>
+          <h3>Venha Viver a Noite Connosco</h3>
+          
+          <div class="contact-items">
+            <div class="contact-row">
+              <div class="contact-icon">📍</div>
+              <div class="contact-text">
+                <h5>Endereço Principal</h5>
+                <p>De frente à Administração Municipal, Vila de Viana, Luanda — Angola</p>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-icon">📞</div>
+              <div class="contact-text">
+                <h5>Reservas & Linha Direta</h5>
+                <p><a href="tel:+244949292401">+244 949 292 401</a></p>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-icon">✉️</div>
+              <div class="contact-text">
+                <h5>Correio Eletrónico</h5>
+                <p><a href="mailto:domingosbenrodiogo@gmail.com">domingosbenrodiogo@gmail.com</a></p>
+              </div>
+            </div>
+
+            <div class="contact-row">
+              <div class="contact-icon">🕒</div>
+              <div class="contact-text">
+                <h5>Horário de Funcionamento</h5>
+                <p>Quinta a Domingo — Das 18:00 ao fecho</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="location-box">
+          <span class="admin-pin">🏛️</span>
+          <h4 style="font-family: var(--font-title); font-size: 1.4rem; margin-bottom: 0.8rem;">Localização Privilegiada</h4>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.8rem;">
+            Situado no coração de Viana, com estacionamento seguro e fácil acesso junto à Administração Municipal.
+          </p>
+          <a href="https://wa.me/244949292401?text=Olá%20Galeria%20da%20Música,%20gostaria%20de%20saber%20a%20localização%20exata." target="_blank" class="btn-reservar" style="display: inline-block;">
+            Abrir no WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODAL DE RESERVA VIA WHATSAPP ================= -->
+  <div class="modal-overlay" id="modal-reserva">
+    <div class="modal-card">
+      <button class="modal-close" id="close-modal">&times;</button>
+      <h3>Reservar Mesa</h3>
+      <p>Preencha os dados e confirme diretamente com o nosso gestor de sala no WhatsApp.</p>
+
+      <form id="form-reserva">
+        <div class="form-group">
+          <label>Nome Completo</label>
+          <input type="text" id="res-nome" placeholder="Ex: Cláudio Silva" required />
+        </div>
+
+        <div class="form-group">
+          <label>Data / Noite Desejada</label>
+          <select id="res-noite">
+            <option value="Quinta do Semba & Voz">Quinta-Feira — Semba & Voz</option>
+            <option value="Sexta Afro Beats & Amapiano">Sexta-Feira — Afro Beats & Amapiano</option>
+            <option value="Sábado Galeria Club Night">Sábado — Galeria Club Night</option>
+            <option value="Domingo Lounge Relax">Domingo — Lounge & Grelhados</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Número de Pessoas</label>
+          <input type="number" id="res-pessoas" min="1" max="25" value="4" required />
+        </div>
+
+        <div class="form-group">
+          <label>Área Pretendida</label>
+          <select id="res-area">
+            <option value="Mesa Bar Lounge">Bar Lounge Interior</option>
+            <option value="Sofá VIP com Serviço">Sofá VIP Exclusivo</option>
+            <option value="Área ao Ar Livre">Esplanada Arejada</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-reservar" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">
+          Confirmar no WhatsApp (+244 949 292 401)
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <p>© 2026 Galeria da Música — Bar Lounge & Restaurante. Vila de Viana, Luanda, Angola.</p>
+    <p style="margin-top: 0.5rem; color: #575466;">Todos os direitos reservados • Contacto: +244 949 292 401</p>
+  </footer>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    // 1. Menu Mobile Toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const navbar = document.getElementById('navbar');
+
+    menuBtn.addEventListener('click', () => {
+      navbar.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-item a').forEach(link => {
+      link.addEventListener('click', () => {
+        navbar.classList.remove('active');
+        document.querySelectorAll('.nav-item a').forEach(el => el.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+
+    // 2. Abertura e Fecho do Modal de Reservas
+    const modalReserva = document.getElementById('modal-reserva');
+    const closeModalBtn = document.getElementById('close-modal');
+    const openResButtons = [
+      document.getElementById('btn-open-reserva'),
+      document.getElementById('hero-btn-reserva'),
+      ...document.querySelectorAll('.open-res-card')
+    ];
+
+    openResButtons.forEach(btn => {
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          modalReserva.classList.add('open');
+        });
+      }
+    });
+
+    closeModalBtn.addEventListener('click', () => modalReserva.classList.remove('open'));
+    
+    modalReserva.addEventListener('click', (e) => {
+      if (e.target === modalReserva) modalReserva.classList.remove('open');
+    });
+
+    // 3. Submissão do Formulário para o WhatsApp Angolano (+244 949 292 401)
+    const formReserva = document.getElementById('form-reserva');
+    formReserva.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const nome = document.getElementById('res-nome').value.trim();
+      const noite = document.getElementById('res-noite').value;
+      const pessoas = document.getElementById('res-pessoas').value;
+      const area = document.getElementById('res-area').value;
+
+      const mensagem = `Olá Galeria da Música! Gostaria de fazer uma reserva:%0A%0A` +
+        `👤 *Nome:* ${encodeURIComponent(nome)}%0A` +
+        `📅 *Noite:* ${encodeURIComponent(noite)}%0A` +
+        `👥 *Pessoas:* ${pessoas}%0A` +
+        `📍 *Área:* ${encodeURIComponent(area)}%0A%0A` +
+        `Aguardo confirmação da disponibilidade. Obrigado!`;
+
+      // Redireciona para o WhatsApp com os contactos retirados da página oficial
+      const whatsappURL = `https://wa.me/244949292401?text=${mensagem}`;
+      window.open(whatsappURL, '_blank');
+      
+      modalReserva.classList.remove('open');
+      formReserva.reset();
+    });
+  </script>
+</body>
+</html>
