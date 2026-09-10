@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galeria 360° — Galeria da Música | Viana, Luanda</title>
+  
+  <!-- Fontes Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       1. TOKENS & IDENTIDADE VISUAL (DARK & GOLD LUXURY)
+       ========================================================================== */
+    :root {
+      --bg-base: #08070b;
+      --gold-primary: #f5a623;
+      --gold-glow: #ffbe43;
+      --gold-dark: #b87b14;
+      --text-main: #f5f5f7;
+      --text-muted: #9c98ab;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glass: rgba(245, 166, 35, 0.25);
+      --font-title: 'Cinzel', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'Space Grotesk', monospace;
+
+      /* Props padrão do DomeGallery */
+      --radius: 650px;
+      --viewer-pad: 32px;
+      --overlay-blur-color: #08070b;
+      --tile-radius: 30px;
+      --enlarge-radius: 30px;
+      --image-filter: grayscale(1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      user-select: none;
+    }
+
+    body.dg-scroll-lock {
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    /* ==========================================================================
+       2. CABEÇALHO INTEGRADO COM LINK DE RETORNO AO INDEX.HTML
+       ========================================================================== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(8, 7, 11, 0.75);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .header-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+    }
+
+    .logo-icon svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 8px rgba(245, 166, 35, 0.4));
+    }
+
+    .brand-names .title {
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      line-height: 1;
+      background: linear-gradient(135deg, #ffffff 40%, var(--gold-primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    .brand-names .subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+
+    .nav-item a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .nav-item a:hover,
+    .nav-item.active a {
+      color: var(--gold-glow);
+    }
+
+    .btn-voltar {
+      background: rgba(245, 166, 35, 0.12);
+      border: 1px solid var(--border-glass);
+      color: var(--gold-glow);
+      padding: 0.55rem 1.2rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-voltar:hover {
+      background: var(--gold-primary);
+      color: #000;
+      box-shadow: 0 0 20px rgba(245, 166, 35, 0.5);
+    }
+
+    /* Indicador Flutuante Superior */
+    .gallery-hud {
+      position: fixed;
+      top: 5rem;
+      left: 2rem;
+      right: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .hud-title h2 {
+      font-family: var(--font-title);
+      font-size: 1.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    }
+
+    .hud-title p {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--gold-primary);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .hud-controls {
+      pointer-events: auto;
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      background: rgba(18, 16, 25, 0.75);
+      border: 1px solid var(--border-subtle);
+      padding: 0.4rem 0.8rem;
+      border-radius: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hud-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      transition: all 0.2s;
+    }
+
+    .hud-btn.active, .hud-btn:hover {
+      color: #000;
+      background: var(--gold-primary);
+    }
+
+    /* ==========================================================================
+       3. CSS EXATO DO COMPONENTE DOME GALLERY (REACT BITS SPEC)
+       ========================================================================== */
+    .dg-root {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #15121e 0%, var(--overlay-blur-color) 90%);
+    }
+
+    .dg-main {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: calc(var(--radius) * 1.8);
+      perspective-origin: 50% 50%;
+      cursor: grab;
+      touch-action: none;
+      z-index: 10;
+    }
+
+    .dg-main:active {
+      cursor: grabbing;
+    }
+
+    .dg-sphere {
+      position: absolute;
+      width: 0;
+      height: 0;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .dg-item {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 140px;
+      height: 180px;
+      margin-left: -70px;
+      margin-top: -90px;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      will-change: transform;
+      --rot-x-delta: 0deg;
+      --rot-y-delta: 0deg;
+    }
+
+    .dg-item__image {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--tile-radius);
+      overflow: hidden;
+      background: #14121a;
+      border: 1px solid rgba(245, 166, 35, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      cursor: pointer;
+    }
+
+    .dg-item__image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: var(--image-filter);
+      pointer-events: none;
+      transition: filter 0.3s ease, transform 0.3s ease;
+    }
+
+    .dg-item__image:hover {
+      transform: scale(1.06);
+      border-color: var(--gold-glow);
+      box-shadow: 0 0 25px rgba(245, 166, 35, 0.4);
+      z-index: 10;
+    }
+
+    .dg-item__image:hover img {
+      filter: grayscale(0) contrast(1.1);
+      transform: scale(1.06);
+    }
+
+    /* Overlay de vinheta e desfoque periférico */
+    .dg-overlay-blur {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(
+        circle at center,
+        transparent 35%,
+        rgba(8, 7, 11, 0.4) 65%,
+        var(--overlay-blur-color) 92%
+      );
+      z-index: 20;
+    }
+
+    /* Scrim / Backdrop de foco */
+    .dg-scrim {
+      position: absolute;
+      inset: 0;
+      background: rgba(6, 5, 10, 0.85);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      z-index: 50;
+    }
+
+    .dg-root[data-enlarging='true'] .dg-scrim {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Visualizador Central de Imagem Ampliada */
+    .dg-viewer {
+      position: absolute;
+      inset: var(--viewer-pad);
+      pointer-events: none;
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dg-frame {
+      position: relative;
+      width: min(85vw, 600px);
+      height: min(80vh, 600px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dg-viewer .enlarge {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      max-width: 88vw;
+      max-height: 80vh;
+      border-radius: var(--enlarge-radius);
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(245, 166, 35, 0.35);
+      border: 1px solid var(--border-glass);
+      pointer-events: auto;
+      background: #14121c;
+      animation: popZoom 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes popZoom {
+      from {
+        opacity: 0;
+        transform: scale(0.85);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .dg-viewer .enlarge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dg-viewer .enlarge .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 1.5rem;
+      background: linear-gradient(180deg, transparent 0%, rgba(6, 5, 10, 0.95) 100%);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .dg-viewer .enlarge .caption span {
+      font-family: var(--font-title);
+      font-size: 1.05rem;
+      color: #fff;
+      letter-spacing: 0.05em;
+    }
+
+    .dg-viewer .enlarge .caption small {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--gold-primary);
+      text-transform: uppercase;
+    }
+
+    .btn-close-enlarge {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    }
+
+    .btn-close-enlarge:hover {
+      background: var(--gold-primary);
+      color: #000;
+    }
+
+    /* Clone animado no encerramento da ampliação */
+    .enlarge-closing {
+      position: absolute;
+      z-index: 9999;
+      border-radius: var(--enlarge-radius);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .gallery-hud {
+        flex-direction: column;
+        gap: 0.8rem;
+        top: 4.8rem;
+        left: 1.2rem;
+        right: 1.2rem;
+      }
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= CABEÇALHO DE NAVEGAÇÃO ================= -->
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="38" width="8" height="24" rx="4" fill="url(#goldGrad)" />
+            <rect x="26" y="22" width="8" height="56" rx="4" fill="url(#goldGrad)" />
+            <rect x="42" y="8" width="10" height="84" rx="5" fill="url(#goldGrad)" />
+            <rect x="58" y="16" width="8" height="68" rx="4" fill="url(#goldGrad)" />
+            <rect x="74" y="32" width="8" height="36" rx="4" fill="url(#goldGrad)" />
+            <circle cx="90" cy="50" r="5" fill="url(#goldGrad)" />
+            <defs>
+              <linearGradient id="goldGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FFD066"/>
+                <stop offset="0.5" stop-color="#F5A623"/>
+                <stop offset="1" stop-color="#B87B14"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-names">
+          <span class="title">Galeria da Música</span>
+          <span class="subtitle">Bar Lounge & Club</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="index.html#inicio">Início</a></li>
+          <li class="nav-item"><a href="index.html#sobre">O Espaço</a></li>
+          <li class="nav-item"><a href="index.html#eventos">Noites</a></li>
+          <li class="nav-item"><a href="index.html#menu">Cardápio</a></li>
+          <li class="nav-item active"><a href="galeria.html">Galeria</a></li>
+        </ul>
+        <a href="index.html" class="btn-voltar">
+          ← Voltar à Página Principal
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================= HUD FLUTUANTE DA CÚPULA ================= -->
+  <div class="gallery-hud">
+    <div class="hud-title">
+      <h2>Cúpula Visual 360°</h2>
+      <p>Arraste para girar em 3D • Clique num registo para ampliar</p>
+    </div>
+
+    <div class="hud-controls">
+      <button class="hud-btn active" id="btn-mono">Preto & Branco</button>
+      <button class="hud-btn" id="btn-color">Cores Reais</button>
+    </div>
+  </div>
+
+  <!-- ================= DOME GALLERY ESTRUTURA DOM ================= -->
+  <div class="dg-root" id="dg-root">
+    <div class="dg-main" id="dg-main">
+      <div class="dg-sphere" id="dg-sphere"></div>
+    </div>
+    <div class="dg-overlay-blur"></div>
+    <div class="dg-scrim" id="dg-scrim"></div>
+    <div class="dg-viewer" id="dg-viewer">
+      <div class="dg-frame" id="dg-frame"></div>
+    </div>
+  </div>
+
+  <!-- ================= LÓGICA DO DOME GALLERY (JS) ================= -->
+  <script>
+    (function () {
+      // 1. Array de fotografias temáticas de Luanda, Semba, DJs, Lounge e Coquetelaria
+      const DEFAULT_IMAGES = [
+        {
+          src: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800&auto=format&fit=crop',
+          alt: 'Noite de Clubbing & Luzes Cénicas'
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop',
+          alt: 'Festa & Atmosfera Noturna'
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=800&auto=format&fit=crop',
+          alt: 'DJ Set & Iluminação Laser'
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?q=80&w=800&auto=format&fit=crop',
+          alt: 'Afro Beats & Batidas Noturnas'
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop',
+          alt: 'Mesa de Som & Pickups'
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop',
+          alt: 'Multidão em Viana'
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=800&auto=format&fit=crop',
+          alt: 'Cocktails de Assinatura'
+        },
+        {
+          src: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=800&auto=format&fit=crop',
+          alt: 'Ambiente Lounge & Bar'
+        }
+      ];
+
+      // 2. Parâmetros fiéis à especificação de props do React Bits
+      const props = {
+        images: DEFAULT_IMAGES,
+        fit: 0.5,
+        fitBasis: 'auto',
+        minRadius: 600,
+        maxRadius: Infinity,
+        padFactor: 0.25,
+        overlayBlurColor: '#08070b',
+        maxVerticalRotationDeg: 5,
+        dragSensitivity: 20,
+        enlargeTransitionMs: 300,
+        segments: 35,
+        dragDampening: 2,
+        openedImageWidth: '400px',
+        openedImageHeight: '400px',
+        imageBorderRadius: '30px',
+        openedImageBorderRadius: '30px',
+        grayscale: true
+      };
+
+      // 3. Utilitários Matemáticos de Ângulo
+      const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+      const normalizeAngle = d => ((d % 360) + 360) % 360;
+      const wrapAngleSigned = deg => {
+        const a = (((deg + 180) % 360) + 360) % 360;
+        return a - 180;
+      };
+      const getDataNumber = (el, name, fallback) => {
+        const attr = el.dataset[name] ?? el.getAttribute(`data-${name}`);
+        const n = attr == null ? NaN : parseFloat(attr);
+        return Number.isFinite(n) ? n : fallback;
+      };
+
+      // 4. Construtor de Itens e Coordenadas da Cúpula (buildItems)
+      function buildItems(pool, seg) {
+        const xCols = Array.from({ length: seg }, (_, i) => -37 + i * 2);
+        const evenYs = [-4, -2, 0, 2, 4];
+        const oddYs = [-3, -1, 1, 3, 5];
+
+        const coords = xCols.flatMap((x, c) => {
+          const ys = c % 2 === 0 ? evenYs : oddYs;
+          return ys.map(y => ({ x, y, sizeX: 2, sizeY: 2 }));
+        });
+
+        const totalSlots = coords.length;
+        const normalized = pool.map(image =>
+          typeof image === 'string' ? { src: image, alt: '' } : { src: image.src || '', alt: image.alt || '' }
+        );
+
+        const used = Array.from({ length: totalSlots }, (_, i) => normalized[i % normalized.length]);
+
+        for (let i = 1; i < used.length; i++) {
+          if (used[i].src === used[i - 1].src) {
+            for (let j = i + 1; j < used.length; j++) {
+              if (used[j].src !== used[i].src) {
+                const tmp = used[i];
+                used[i] = used[j];
+                used[j] = tmp;
+                break;
+              }
+            }
+          }
+        }
+
+        return coords.map((c, i) => ({
+          ...c,
+          src: used[i].src,
+          alt: used[i].alt
+        }));
+      }
+
+      function computeItemBaseRotation(offsetX, offsetY, sizeX, sizeY, segments) {
+        const unit = 360 / segments / 2;
+        const rotateY = unit * (offsetX + (sizeX - 1) / 2);
+        const rotateX = unit * (offsetY - (sizeY - 1) / 2);
+        return { rotateX, rotateY };
+      }
+
+      // 5. Elementos DOM
+      const rootRef = document.getElementById('dg-root');
+      const mainRef = document.getElementById('dg-main');
+      const sphereRef = document.getElementById('dg-sphere');
+      const frameRef = document.getElementById('dg-frame');
+      const viewerRef = document.getElementById('dg-viewer');
+      const scrimRef = document.getElementById('dg-scrim');
+
+      // Estado e Referências Reativas
+      const rotationRef = { x: 0, y: 0 };
+      const startRotRef = { x: 0, y: 0 };
+      let startPosRef = null;
+      let lastPosRef = null;
+      let lastTimeRef = 0;
+      let velocityRef = { x: 0, y: 0 };
+      let dragging = false;
+      let moved = false;
+      let inertiaRAF = null;
+      let focusedElRef = null;
+      let originalTilePositionRef = null;
+      let openingRef = false;
+      let openStartedAtRef = 0;
+      let lockedRadius = 600;
+
+      const items = buildItems(props.images, props.segments);
+
+      function lockScroll() {
+        document.body.classList.add('dg-scroll-lock');
+      }
+      function unlockScroll() {
+        if (rootRef.getAttribute('data-enlarging') === 'true') return;
+        document.body.classList.remove('dg-scroll-lock');
+      }
+
+      function applyTransform(xDeg, yDeg) {
+        if (sphereRef) {
+          sphereRef.style.transform = `translateZ(calc(var(--radius) * -1)) rotateX(${xDeg}deg) rotateY(${yDeg}deg)`;
+        }
+      }
+
+      // 6. Gerar os nós 3D na Esfera
+      sphereRef.innerHTML = '';
+      items.forEach((item, index) => {
+        const { rotateX, rotateY } = computeItemBaseRotation(item.x, item.y, item.sizeX, item.sizeY, props.segments);
+
+        const tileEl = document.createElement('div');
+        tileEl.className = 'dg-item';
+        tileEl.dataset.offsetX = item.x;
+        tileEl.dataset.offsetY = item.y;
+        tileEl.dataset.sizeX = item.sizeX;
+        tileEl.dataset.sizeY = item.sizeY;
+        tileEl.dataset.rotX = rotateX;
+        tileEl.dataset.rotY = rotateY;
+        tileEl.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(var(--radius))`;
+
+        const imgWrapper = document.createElement('div');
+        imgWrapper.className = 'dg-item__image';
+        imgWrapper.innerHTML = `<img src="${item.src}" alt="${item.alt || 'Galeria da Música ' + index}" loading="lazy" />`;
+
+        imgWrapper.addEventListener('click', () => {
+          if (moved) return;
+          openItemFromElement(imgWrapper);
+        });
+
+        tileEl.appendChild(imgWrapper);
+        sphereRef.appendChild(tileEl);
+      });
+
+      // 7. Redimensionamento e Ajuste de Raio Dinâmico (ResizeObserver)
+      const ro = new ResizeObserver(entries => {
+        const cr = entries[0].contentRect;
+        const w = Math.max(1, cr.width);
+        const h = Math.max(1, cr.height);
+        const minDim = Math.min(w, h);
+        const maxDim = Math.max(w, h);
+        const aspect = w / h;
+
+        let basis;
+        switch (props.fitBasis) {
+          case 'min': basis = minDim; break;
+          case 'max': basis = maxDim; break;
+          case 'width': basis = w; break;
+          case 'height': basis = h; break;
+          default: basis = aspect >= 1.3 ? w : minDim;
+        }
+
+        let radius = basis * props.fit;
+        const heightGuard = h * 1.35;
+        radius = Math.min(radius, heightGuard);
+        radius = clamp(radius, props.minRadius, props.maxRadius);
+        lockedRadius = Math.round(radius);
+
+        const viewerPad = Math.max(8, Math.round(minDim * props.padFactor));
+        rootRef.style.setProperty('--radius', `${lockedRadius}px`);
+        rootRef.style.setProperty('--viewer-pad', `${viewerPad}px`);
+        rootRef.style.setProperty('--overlay-blur-color', props.overlayBlurColor);
+        rootRef.style.setProperty('--tile-radius', props.imageBorderRadius);
+        rootRef.style.setProperty('--enlarge-radius', props.openedImageBorderRadius);
+        rootRef.style.setProperty('--image-filter', props.grayscale ? 'grayscale(1)' : 'none');
+
+        applyTransform(rotationRef.x, rotationRef.y);
+      });
+      ro.observe(rootRef);
+
+      // 8. Gestão de Inércia Física com Damping
+      function stopInertia() {
+        if (inertiaRAF) {
+          cancelAnimationFrame(inertiaRAF);
+          inertiaRAF = null;
+        }
+      }
+
+      function startInertia(vx, vy) {
+        const MAX_V = 1.4;
+        let vX = clamp(vx, -MAX_V, MAX_V) * 80;
+        let vY = clamp(vy, -MAX_V, MAX_V) * 80;
+        let frames = 0;
+        const d = clamp(props.dragDampening ?? 0.6, 0, 1);
+        const frictionMul = 0.94 + 0.055 * d;
+        const stopThreshold = 0.015 - 0.01 * d;
+        const maxFrames = Math.round(90 + 270 * d);
+
+        const step = () => {
+          vX *= frictionMul;
+          vY *= frictionMul;
+          if (Math.abs(vX) < stopThreshold && Math.abs(vY) < stopThreshold) {
+            inertiaRAF = null;
+            return;
+          }
+          if (++frames > maxFrames) {
+            inertiaRAF = null;
+            return;
+          }
+          const nextX = clamp(rotationRef.x - vY / 200, -props.maxVerticalRotationDeg, props.maxVerticalRotationDeg);
+          const nextY = wrapAngleSigned(rotationRef.y + vX / 200);
+          rotationRef.x = nextX;
+          rotationRef.y = nextY;
+          applyTransform(nextX, nextY);
+          inertiaRAF = requestAnimationFrame(step);
+        };
+
+        stopInertia();
+        inertiaRAF = requestAnimationFrame(step);
+      }
+
+      // 9. Interação Gestual com Pointer Events (Substitui @use-gesture/react com perfeição)
+      mainRef.addEventListener('pointerdown', e => {
+        if (focusedElRef) return;
+        stopInertia();
+        dragging = true;
+        moved = false;
+        startRotRef.x = rotationRef.x;
+        startRotRef.y = rotationRef.y;
+        startPosRef = { x: e.clientX, y: e.clientY };
+        lastPosRef = { x: e.clientX, y: e.clientY };
+        lastTimeRef = performance.now();
+        velocityRef = { x: 0, y: 0 };
+        try { mainRef.setPointerCapture(e.pointerId); } catch (_) {}
+      });
+
+      mainRef.addEventListener('pointermove', e => {
+        if (!dragging || focusedElRef || !startPosRef) return;
+        const now = performance.now();
+        const dt = Math.max(now - lastTimeRef, 1);
+        const dxTotal = e.clientX - startPosRef.x;
+        const dyTotal = e.clientY - startPosRef.y;
+
+        if (!moved) {
+          const dist2 = dxTotal * dxTotal + dyTotal * dyTotal;
+          if (dist2 > 16) moved = true;
+        }
+
+        velocityRef = {
+          x: ((e.clientX - lastPosRef.x) / dt) * 16,
+          y: ((e.clientY - lastPosRef.y) / dt) * 16
+        };
+        lastPosRef = { x: e.clientX, y: e.clientY };
+        lastTimeRef = now;
+
+        const nextX = clamp(
+          startRotRef.x - dyTotal / props.dragSensitivity,
+          -props.maxVerticalRotationDeg,
+          props.maxVerticalRotationDeg
+        );
+        const nextY = wrapAngleSigned(startRotRef.y + dxTotal / props.dragSensitivity);
+
+        if (rotationRef.x !== nextX || rotationRef.y !== nextY) {
+          rotationRef.x = nextX;
+          rotationRef.y = nextY;
+          applyTransform(nextX, nextY);
+        }
+      });
+
+      const handlePointerEnd = e => {
+        if (!dragging) return;
+        dragging = false;
+        try { mainRef.releasePointerCapture(e.pointerId); } catch (_) {}
+
+        if (Math.abs(velocityRef.x) > 0.005 || Math.abs(velocityRef.y) > 0.005) {
+          startInertia(velocityRef.x, velocityRef.y);
+        }
+      };
+
+      mainRef.addEventListener('pointerup', handlePointerEnd);
+      mainRef.addEventListener('pointercancel', handlePointerEnd);
+
+      // 10. Abertura do Item em Destaque (openItemFromElement)
+      function openItemFromElement(el) {
+        if (openingRef) return;
+        openingRef = true;
+        openStartedAtRef = performance.now();
+        lockScroll();
+
+        const parent = el.parentElement;
+        focusedElRef = el;
+        el.setAttribute('data-focused', 'true');
+
+        const offsetX = getDataNumber(parent, 'offsetX', 0);
+        const offsetY = getDataNumber(parent, 'offsetY', 0);
+        const sizeX = getDataNumber(parent, 'sizeX', 2);
+        const sizeY = getDataNumber(parent, 'sizeY', 2);
+        const parentRot = computeItemBaseRotation(offsetX, offsetY, sizeX, sizeY, props.segments);
+
+        const parentY = normalizeAngle(parentRot.rotateY);
+        const globalY = normalizeAngle(rotationRef.y);
+        let rotY = -(parentY + globalY) % 360;
+        if (rotY < -180) rotY += 360;
+        const rotX = -parentRot.rotateX - rotationRef.x;
+
+        parent.style.setProperty('--rot-y-delta', `${rotY}deg`);
+        parent.style.setProperty('--rot-x-delta', `${rotX}deg`);
+
+        originalTilePositionRef = el.getBoundingClientRect();
+        el.style.visibility = 'hidden';
+        rootRef.setAttribute('data-enlarging', 'true');
+
+        // Cria o elemento ampliado
+        const overlay = document.createElement('div');
+        overlay.className = 'enlarge';
+        const img = el.querySelector('img');
+
+        overlay.innerHTML = `
+          <img src="${img.src}" alt="${img.alt}" />
+          <button class="btn-close-enlarge" id="btn-close-overlay">FECHAR (ESC)</button>
+          <div class="caption">
+            <div>
+              <span>${img.alt}</span>
+              <br/>
+              <small>Galeria da Música • Viana</small>
+            </div>
+          </div>
+        `;
+
+        viewerRef.appendChild(overlay);
+        document.getElementById('btn-close-overlay').addEventListener('click', closeViewer);
+      }
+
+      // 11. Fechamento Suave com Animação Reversa
+      function closeViewer() {
+        if (performance.now() - openStartedAtRef < 200) return;
+        const el = focusedElRef;
+        if (!el) return;
+
+        const parent = el.parentElement;
+        const overlay = viewerRef.querySelector('.enlarge');
+        if (!overlay) return;
+
+        const originalPos = originalTilePositionRef;
+        if (!originalPos) {
+          overlay.remove();
+          finishClose(parent, el);
+          return;
+        }
+
+        const currentRect = overlay.getBoundingClientRect();
+        const rootRect = rootRef.getBoundingClientRect();
+
+        const originalPosRel = {
+          left: originalPos.left - rootRect.left,
+          top: originalPos.top - rootRect.top,
+          width: originalPos.width,
+          height: originalPos.height
+        };
+
+        const overlayRel = {
+          left: currentRect.left - rootRect.left,
+          top: currentRect.top - rootRect.top,
+          width: currentRect.width,
+          height: currentRect.height
+        };
+
+        const animatingOverlay = document.createElement('div');
+        animatingOverlay.className = 'enlarge-closing';
+        animatingOverlay.style.left = `${overlayRel.left}px`;
+        animatingOverlay.style.top = `${overlayRel.top}px`;
+        animatingOverlay.style.width = `${overlayRel.width}px`;
+        animatingOverlay.style.height = `${overlayRel.height}px`;
+        animatingOverlay.style.transition = `all ${props.enlargeTransitionMs}ms ease-out`;
+
+        const originalImg = overlay.querySelector('img');
+        if (originalImg) {
+          const cloneImg = originalImg.cloneNode();
+          cloneImg.style.width = '100%';
+          cloneImg.style.height = '100%';
+          cloneImg.style.objectFit = 'cover';
+          animatingOverlay.appendChild(cloneImg);
+        }
+
+        overlay.remove();
+        rootRef.appendChild(animatingOverlay);
+
+        void animatingOverlay.getBoundingClientRect();
+
+        requestAnimationFrame(() => {
+          animatingOverlay.style.left = `${originalPosRel.left}px`;
+          animatingOverlay.style.top = `${originalPosRel.top}px`;
+          animatingOverlay.style.width = `${originalPosRel.width}px`;
+          animatingOverlay.style.height = `${originalPosRel.height}px`;
+          animatingOverlay.style.opacity = '0';
+        });
+
+        animatingOverlay.addEventListener('transitionend', () => {
+          animatingOverlay.remove();
+          finishClose(parent, el);
+        }, { once: true });
+      }
+
+      function finishClose(parent, el) {
+        originalTilePositionRef = null;
+        if (parent) {
+          parent.style.setProperty('--rot-y-delta', '0deg');
+          parent.style.setProperty('--rot-x-delta', '0deg');
+        }
+        if (el) {
+          el.style.visibility = '';
+          el.removeAttribute('data-focused');
+        }
+        focusedElRef = null;
+        rootRef.removeAttribute('data-enlarging');
+        openingRef = false;
+        unlockScroll();
+      }
+
+      scrimRef.addEventListener('click', closeViewer);
+      window.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeViewer();
+      });
+
+      // 12. Controles de Filtro (Preto & Branco vs Cores)
+      const btnMono = document.getElementById('btn-mono');
+      const btnColor = document.getElementById('btn-color');
+
+      btnMono.addEventListener('click', () => {
+        props.grayscale = true;
+        rootRef.style.setProperty('--image-filter', 'grayscale(1)');
+        btnMono.classList.add('active');
+        btnColor.classList.remove('active');
+      });
+
+      btnColor.addEventListener('click', () => {
+        props.grayscale = false;
+        rootRef.style.setProperty('--image-filter', 'none');
+        btnColor.classList.add('active');
+        btnMono.classList.remove('active');
+      });
+    })();
+  </script>
+</body>
+</html>
